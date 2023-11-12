@@ -1,0 +1,92 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+	<title>To-Do List</title>
+	<style>
+		body {
+			font-family: Arial, sans-serif;
+			background-color: #f4f4f4;
+		}
+		h1 {
+			text-align: center;
+			color: #333;
+		}
+		form {
+			margin: 0 auto;
+			max-width: 400px;
+			padding: 1em;
+			background-color: #fff;
+			border-radius: 10px;
+			box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+		}
+		input[type="text"] {
+			width: 100%;
+			padding: 0.5em;
+			margin-bottom: 1em;
+			border-radius: 5px;
+			border: none;
+			box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+		}
+		input[type="submit"] {
+			background-color: #333;
+			color: #fff;
+			border: none;
+			padding: 0.5em 1em;
+			border-radius: 5px;
+			cursor: pointer;
+			box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+		}
+		ul {
+			list-style: none;
+			padding: 0;
+			margin: 1em 0;
+			background-color: #fff;
+			border-radius: 10px;
+			box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+		}
+		li {
+			padding: 0.5em;
+			border-bottom: 1px solid #ccc;
+		}
+		li:last-child {
+			border-bottom: none;
+		}
+		li input[type="checkbox"] {
+			margin-right: 1em;
+		}
+		li.completed {
+			text-decoration: line-through;
+			color: #ccc;
+		}
+	</style>
+</head>
+<div>
+	{% if user.is_authenticated %}
+	<p>Hi {{ user.username }}!</p>
+	<p><a href="{% url 'logout' %}">Log out</a></p>
+	{% endif %}
+	
+	<form action="{% url 'login'%}" method="post" {% csrf_token %}><button>Login</button></form>
+	
+	
+</div>
+<body>
+	<h1>To-Do List</h1>
+	<form method="post">
+		{% csrf_token %}
+		<input type="text" required name="text" placeholder="Write a todo">
+		<input type="submit" value="Add">
+	</form>
+  {% for todo in todos  %}
+	<ul>
+		<li><input type="checkbox"> {{todo.text}} <br> <h5>{{todo.created_time}}</h5> </li>
+		<div>
+			<form action="{% url 'delete' todo.id  %}" method="post"> {% csrf_token %} <button>Delete</button></form>
+		</div>
+		
+	</ul>
+  {% endfor %}
+  {{now}}
+</body>
+</html>
